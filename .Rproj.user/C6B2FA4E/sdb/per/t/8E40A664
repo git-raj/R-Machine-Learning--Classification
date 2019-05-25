@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# KNN Classification of SMS Dataset\nrm(list=ls()); cat(\"\\014\") # clear all\nlibrary(tm) # Use this package for Text Mining\n\nload(\"Data/SMS_DTM.RData\") # Load dtm from saved data\n\ndtm <- as.matrix(dtm)\ndtm <- dtm[1:1000,] # Subset DTM\n\n# Split the Document-Term Matrix into Train & Test Datasets\nlibrary(class) # \n# Consider \"spam\" as Positive and \"ham\" as Negative\nPositive <- \"spam\"; Negative <- \"ham\"; CM.Names <- c(Positive,Negative)\nDS.Size <- dim(dtm)[1]\nTest.Train.Percent <- 0.6 # Split Data into 60% for Training and 40% for Testing\nix.Range <- round(DS.Size*Test.Train.Percent)\ntrain.Range <- seq(from = 1, to = ix.Range, by = 1); test.Range <- seq(from = (ix.Range+1), to = DS.Size, by = 1)\n\ntrain.doc <- dtm[train.Range,] # Dataset for which classification is already known\ntest.doc <- dtm[test.Range,] # Dataset we are trying to classify\n\n# Generate TAGS - Correct answers for the Train dataset\nz <- c(SMS.Data$Tag[train.Range])\nsum(z==Positive) # 88 - Number of Positive events (\"spam\") in the Test Data\nsum(z==Negative) # 512 - Number of Negative events (\"ham\") in the Test Data\nz <- gsub(Positive,\"Positive\",z); z <- gsub(Negative,\"Negative\",z) # Replace Tags with \nTags.Train <- factor(z, levels = c(\"Positive\",\"Negative\")) # kNN expects Tags to be Factors data type\n\n# Generate TAGS - Correct answers for the Test dataset\nz <- c(SMS.Data$Tag[test.Range]); \nsum(z==Positive) # 64 - Number of Positive events (\"spam\") in the Test Data\nsum(z==Negative) # 336 - Number of Negative events (\"ham\") in the Test Data\nz <- gsub(Positive,\"Positive\",z); z <- gsub(Negative,\"Negative\",z) # Replace Tags with \nTags.Test <- factor(z, levels = c(\"Positive\",\"Negative\")) # kNN expects Tags to be Factors data type\n\n# 1) KNN Classificationusing package \"class\" ====\nset.seed(0)  \nprob.test <- knn(train.doc, test.doc, Tags.Train, k = 2, prob=TRUE) # k-number of neighbors considered\n\n### -----------\n# Display Classification Results\na <- 1:length(prob.test)\nb <- levels(prob.test)[prob.test] # asign your classification Tags (Talk or Sci)\nc <- attributes(prob.test)$prob # asign your classification probability values \nd <- prob.test==Tags.Test # Logicaly match your classification Tags with the known \"Tags\"\nresult <- data.frame(Doc=a,Predict=b,Prob=c, Correct=d) # Tabulate your result\nsum(d)/length(Tags.Test) # % Correct Classification (0.86)\n\n# Insert your code to find: \n# Confusion Matrix \n# Precision \n# Recall\n# Fscore \n# Accuracy <- (TP+TN)/(TP+TN+FP+FN)\n\n\n\n\n\n",
+    "created" : 1532636920414.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1938552322",
+    "id" : "8E40A664",
+    "lastKnownWriteTime" : 1532640603,
+    "last_content_update" : 1532640603654,
+    "path" : "~/My Files/Teachng/2018/Summer/Classroom/Class 8/SMS Clssification Lab/Exercise Code.R",
+    "project_path" : "Exercise Code.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
